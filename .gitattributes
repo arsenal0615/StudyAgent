@@ -239,3 +239,6 @@ doc/evidence/2026-11-03/first-reading-seasons-friends-and-source-inference/** -t
 doc/evidence/2026-11-03/second-literacy-conditions-components-and-omitted-ending/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 doc/evidence/2026-11-03/everyday-reading-punctuation-speakers-and-conditions/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Linux deployment kit is copied to the server verbatim; keep LF on Windows checkouts.
+resources/deployment/lan-linux/** text eol=lf

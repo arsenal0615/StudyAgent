@@ -1,0 +1,27 @@
+[Unit]
+Description=StudyAgent Web (Next.js)
+After=network-online.target studyagent-api.service
+Wants=network-online.target
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=studyagent
+Group=studyagent
+WorkingDirectory=/data/studyagent/current
+EnvironmentFile=/etc/studyagent/application.env
+Environment=HOME=/data/studyagent/var/home
+Environment=PATH=/data/studyagent/tools/node/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/data/studyagent/tools/node/bin/node scripts/run-web.cjs start -p 13300 -H 127.0.0.1
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/data/studyagent/current/apps/web/.next/cache
+
+[Install]
+WantedBy=multi-user.target

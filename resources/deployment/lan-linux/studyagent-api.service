@@ -1,0 +1,31 @@
+[Unit]
+Description=StudyAgent API (with embedded worker)
+After=network-online.target studyagent-tts.service
+Wants=network-online.target
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=studyagent
+Group=studyagent
+WorkingDirectory=/data/studyagent/current
+EnvironmentFile=/etc/studyagent/application.env
+Environment=HOME=/data/studyagent/var/home
+Environment=PATH=/data/studyagent/tools/node/bin:/usr/local/bin:/usr/bin:/bin
+# Reuse the tripo-cli AIHUB keys; systemd hands them over as credential files
+LoadCredential=aihub.key:/etc/tripo/aihub.key
+LoadCredential=image.key:/etc/tripo/image.key
+ExecStart=/data/studyagent/bin/start-api.sh
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=120
+KillMode=mixed
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/data/studyagent/var
+
+[Install]
+WantedBy=multi-user.target

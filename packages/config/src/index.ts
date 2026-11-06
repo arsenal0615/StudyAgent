@@ -10,6 +10,9 @@ export const apiEnvSchema = z.object({
   OPENAI_MODEL: z.string().default('gpt-4.1-mini'),
   OPENAI_TTS_MODEL: z.string().default('tts-1'),
   OPENAI_TTS_VOICE: z.string().default('alloy'),
+  // Optional separate OpenAI-compatible speech endpoint; empty values fall back to OPENAI_BASE_URL / OPENAI_API_KEY.
+  OPENAI_TTS_BASE_URL: z.string().trim().url().optional().or(z.literal('').transform(() => undefined)),
+  OPENAI_TTS_API_KEY: z.string().trim().min(1).optional().or(z.literal('').transform(() => undefined)),
   MINIMAX_API_KEY: z.string().optional(),
   MINIMAX_TTS_BASE_URL: z.string().url().default('https://api.minimaxi.com/v1/t2a_v2'),
   MINIMAX_TTS_MODEL: z.string().default('speech-2.8-turbo'),

@@ -74,8 +74,10 @@ export function decodeMiniMaxSse(input: string) {
 @Injectable()
 export class SpeechService {
   private readonly env = loadApiEnv();
-  private readonly openai = this.env.OPENAI_API_KEY && !this.env.MINIMAX_API_KEY
-    ? new OpenAI({ apiKey: this.env.OPENAI_API_KEY, baseURL: this.env.OPENAI_BASE_URL, timeout: 20_000, maxRetries: 0 })
+  // Speech may use its own OpenAI-compatible endpoint (e.g. a local TTS service) while chat keeps OPENAI_BASE_URL.
+  private readonly openai = (this.env.OPENAI_TTS_API_KEY ?? this.env.OPENAI_API_KEY) && !this.env.MINIMAX_API_KEY
+    ? new OpenAI({ apiKey: this.env.OPENAI_TTS_API_KEY ?? this.env.OPENAI_API_KEY, baseURL: this.env.OPENAI_TTS_BASE_URL ?? this.env.OPENAI_BASE_URL,
+      timeout: 20_000, maxRetries: 0 })
     : null;
 
   get provider(): 'minimax' | 'openai' | null {

@@ -56,6 +56,25 @@ describe('whiteboard speech providers', () => {
     expect(service.capabilities()).toMatchObject({ available: true, provider: 'openai', defaultVoice: 'alloy' });
     expect(service.capabilities().voices.map(voice => voice.id)).toContain('coral');
   });
+  it('sends speech to a separate OpenAI-compatible endpoint without changing the chat endpoint', async () => {
+    vi.stubEnv('MINIMAX_API_KEY', '');
+    vi.stubEnv('OPENAI_API_KEY', 'fixture-chat-key');
+    vi.stubEnv('OPENAI_BASE_URL', 'https://chat.example.test/v1');
+    vi.stubEnv('OPENAI_TTS_BASE_URL', 'http://127.0.0.1:14500/v1');
+    vi.stubEnv('OPENAI_TTS_API_KEY', '');
+    const requests: Array<{ url: string; authorization: string | null }> = [];
+    vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      requests.push({ url: String(input instanceof Request ? input.url : input), authorization: new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined)).get('authorization') });
+      return new Response(Buffer.from('ID3 synthetic'), { status: 200, headers: { 'content-type': 'audio/mpeg' } });
+    }));
+    try {
+      const result = await new SpeechService().synthesize('先统一单位。', 'alloy');
+      expect(result).toMatchObject({ provider: 'openai', contentType: 'audio/mpeg' });
+      expect(requests).toHaveLength(1);
+      expect(requests[0].url).toBe('http://127.0.0.1:14500/v1/audio/speech');
+      expect(requests[0].authorization).toBe('Bearer fixture-chat-key');
+    } finally { vi.unstubAllGlobals(); }
+  });
   it('uses the same fixed neutral text for an OpenAI voice, validates its version and never substitutes a MiniMax asset',async()=>{
     vi.stubEnv('MINIMAX_API_KEY','');vi.stubEnv('OPENAI_API_KEY','fixture-openai-key');const service=new SpeechService(),preview=service.capabilities().preview!;
     const synthesis=vi.spyOn(service,'synthesize').mockResolvedValue({content:Buffer.from('synthetic OpenAI audio'),contentType:'audio/mpeg',provider:'openai'}),controller=new AbortController();

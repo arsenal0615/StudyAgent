@@ -1,0 +1,31 @@
+[Unit]
+Description=StudyAgent local Chinese TTS (Kokoro v1.1-zh, OpenAI-compatible, 127.0.0.1:14500)
+After=network.target
+
+[Service]
+Type=simple
+User=studyagent
+Group=studyagent
+WorkingDirectory=/data/studyagent/tts
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=HOME=/data/studyagent/tts/cache
+Environment=TMPDIR=/data/studyagent/tts/cache/tmp
+Environment=HF_HOME=/data/studyagent/tts/cache/hf
+Environment=XDG_CACHE_HOME=/data/studyagent/tts/cache/xdg
+Environment=OMP_NUM_THREADS=1
+Environment=TTS_HOST=127.0.0.1
+Environment=TTS_PORT=14500
+Environment=TTS_THREADS=8
+ExecStart=/data/studyagent/tts/venv/bin/python -W ignore::SyntaxWarning /data/studyagent/tts/server.py
+Restart=on-failure
+RestartSec=3
+TimeoutStartSec=180
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

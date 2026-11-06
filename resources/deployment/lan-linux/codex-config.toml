@@ -1,0 +1,12 @@
+# /data/studyagent/codex-home/config.toml (root:studyagent 0640)
+# Codex CLI drives 小九 chat, course crafting and PDF review. The provider key
+# is read from AIHUB_API_KEY, which start-api.sh exports from the systemd credential.
+model_provider = "aihub"
+model = "gpt-5.1"
+model_catalog_json = "/data/studyagent/codex-home/models.json"
+
+[model_providers.aihub]
+name = "AIHUB"
+base_url = "https://aihub.gz4399.com/v1"
+wire_api = "responses"
+env_key = "AIHUB_API_KEY"

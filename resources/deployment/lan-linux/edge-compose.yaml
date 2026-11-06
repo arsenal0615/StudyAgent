@@ -1,0 +1,17 @@
+# /data/studyagent/edge/compose.yaml — HTTPS entry on :8300 (host network).
+name: studyagent-edge
+services:
+  edge:
+    image: nginx:1.28-alpine
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - /data/studyagent/edge/nginx.conf:/etc/nginx/nginx.conf:ro
+      # Same internal-CA certificate (SAN IP 10.0.3.117) used by the tripo workspace on :8443
+      - /etc/tripo/tls/server.crt:/etc/nginx/tls/server.crt:ro
+      - /etc/tripo/tls/server.key:/etc/nginx/tls/server.key:ro
+      - /etc/tripo/ca/ca.crt:/etc/nginx/ca/ca.crt:ro
+      # Company wildcard *.gz4399.com (publicly trusted) for https://tripo.gz4399.com:8300
+      - /etc/tripo/tls/tripo.gz4399.com.crt:/etc/nginx/tls/gz4399.crt:ro
+      - /etc/tripo/tls/tripo.gz4399.com.key:/etc/nginx/tls/gz4399.key:ro
+    logging: {driver: json-file, options: {max-size: "10m", max-file: "3"}}

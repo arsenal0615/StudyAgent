@@ -27,12 +27,12 @@
 
 ## 验证
 
-- 构建：服务器上 `npm ci` 与 `npm run build` 通过；语音改动的配置包构建、API 类型检查与 `speech.service.test.ts` 9 项通过。
+- 构建：提交 `af7f7c0b` 在服务器上 `npm ci` 与 `npm run build` 通过，Web buildId `1OGJ1JZg7r3qZfkEIav5U`；语音改动的配置包构建、API 类型检查与 `speech.service.test.ts` 9 项通过。切换前一致备份 SQLite 至 `/data/studyagent/backups/`，旧版本 `56caddec` 保留在 `releases/` 供回退。
 - HTTPS：本机按公共信任链访问域名入口 200；IP 入口以内部 CA 校验 200；http 跳转 301；tripo 8443 与其他容器不受影响。
 - 账户与模型：合成家长账号注册、Secure Cookie、模型目录、经 `gpt-5.1` 的真实小九回复均通过，随后经本人删除接口删除账号；管理员登录通过。
 - 教材：管理员读取语文三上原卷（Range 206、`%PDF`）与第一课受校验正文 200。
 - 配图：经 AIHUB `gpt-image-2` 真实生成 1536×1024 PNG；就绪探针 `ready`。
-- 语音：本地服务 31/296/770 字分别约 0.9/6.7/14.2 秒，五种音色均可用，重启后约 8 秒恢复。
+- 语音：本地服务 31/296/770 字分别约 0.9/6.7/14.2 秒，五种音色均可用，重启后约 8 秒恢复。经正式入口，合成成人账号打开社会学第一课并请求首句旁白，返回 `audio/mpeg`；课堂能力接口显示语音 `available`、配图 `ready`；账号随后删除。
 
 ## 未完成与边界
 
